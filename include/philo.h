@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/01 17:13:12 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/01 18:41:45 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/01 19:14:09 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,13 @@ typedef struct s_timer
 	int	eat;
 	int	sleep;
 	int	times;
-}	t_timer ;
+}	t_timer;
+
+typedef enum e_bool
+{
+	FALSE = 0,
+	TRUE = 1
+}	t_bool;
 
 /***  FUNCTIONS  ***/
 
