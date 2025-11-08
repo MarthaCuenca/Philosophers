@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/01 17:13:12 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/01 19:14:09 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/06 14:10:10 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,17 @@
 # define MIN_INT 2147483648
 
 # include <stdlib.h>
+# include <pthread.h>
 
 /*** ** STUCTS * ***/
-typedef struct s_timer
+typedef struct s_data
 {
-	int	person;
+	int	people;
 	int	death;
 	int	eat;
 	int	sleep;
 	int	times;
-}	t_timer;
+}	t_data;
 
 typedef enum e_bool
 {
@@ -38,11 +39,14 @@ typedef enum e_bool
 
 /***  FUNCTIONS  ***/
 
+void    	*routine_mng(void *data);
+t_bool		be_philosopher(void *data, void *(routine) (void *));
+
 /*** ** UTILS ** ***/
-void	ft_isspace(const char *str, int *i);
-int		ft_isdigit(int c);
-int		ft_str_isdigit(const char *str);
-void	*ft_memset(void *s, int c, size_t n);
-void	ft_bzero(void *s, size_t n);
-int		ft_atoi(const char *nptr);
+void		ft_isspace(const char *str, int *i);
+int			ft_isdigit(int c);
+int			ft_str_isdigit(const char *str);
+void		*ft_memset(void *s, int c, size_t n);
+void		ft_bzero(void *s, size_t n);
+int			ft_atoi(const char *nptr);
 #endif

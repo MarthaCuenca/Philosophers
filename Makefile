@@ -6,17 +6,19 @@
 #    By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/01 16:07:45 by mcuenca-          #+#    #+#              #
-#    Updated: 2025/11/01 18:40:32 by mcuenca-         ###   ########.fr        #
+#    Updated: 2025/11/06 14:18:56 by mcuenca-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC= cc
-CFLAGS= -Wall -Wextra -Werror -fsanitize=address -Iinclude
+CFLAGS= -Wall -Wextra -Werror -g -Iinclude #-fsanitize=address #-lpthread
 
 HEADER= include/philo.h
 
 SRCS_DIR= src
-SRCS= src/main.c
+SRCS= src/main.c \
+	  src/pthreads.c \
+	  src/routine.c
 
 UTILS_DIR= src/utils
 UTILS= src/utils/ft_isspace.c \
