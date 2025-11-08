@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 19:59:34 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/08 14:09:03 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/08 14:35:40 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ void	*routine_mng(void *data)
 	i = 1;
 	timer = (t_data *)data;
 	pthread_mutex_init(&mutex, NULL);
-	while (i <= timer->people)
+	while (timer->shared_data <= 1000)
 	{
 		pthread_mutex_lock(&mutex);
-		printf("%i\n", i++);
+		printf("%i\n", timer->shared_data++);
 		pthread_mutex_unlock(&mutex);
 	
 	}

@@ -1,3 +1,5 @@
 philo
 en.philo.subject.pdf
 *.o
+*.swp*
+notes

@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/01 17:13:12 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/06 14:10:10 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/08 14:34:47 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef struct s_data
 	int	eat;
 	int	sleep;
 	int	times;
+	int	shared_data;
 }	t_data;
 
 typedef enum e_bool
