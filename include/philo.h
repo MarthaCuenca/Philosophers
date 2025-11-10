@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/01 17:13:12 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/10 09:48:37 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/10 10:23:15 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ typedef struct s_data
 typedef struct s_id
 {
 	int				id;
-	t_bool			owned[2];
+	t_bool			hand[2];
 	int				timer;
 	struct s_data	*share;
 }	t_id;
