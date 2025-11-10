@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 19:57:53 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/10 09:23:05 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/10 19:50:23 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,35 +16,73 @@
 #include <pthread.h>
 #include <stdio.h>
 
-void	fill_array(int n, t_id single[], t_data *share, t_bool hashi[])
+void	clean_mng(t_id *data, pthread_t *philos)
 {
-	int	i;
+	free(data->share.dy.hashi);
+	free(data);
+	free(philos);
+}
 
+t_id	*get_id_card(int n)
+{
+	int		i;
+	t_id	*tmp;
+
+	tmp = malloc(n * sizeof(t_id));
+	if (!tmp)
+		return (NULL);
 	i = 0;
 	while (i < n)
 	{
-		single[i].id = i;
+		tmp[i].id = i;
 		i++;
 	}
 	i = 0;
 	while (i < n)
-		hashi[i++] = TRUE;
-	share->hashi = hashi;
+	{
+		tmp[i].hand[R] = FALSE;
+		tmp[i].hand[L] = FALSE;
+		i++;
+	}
+	return (tmp);
+
 }
 
-t_bool	be_philosopher(int n, t_data *data, void *(routine) (void *))
+pthread_t	*create_philosophers(int n)
+{
+	pthread_t	*tmp;
+
+	tmp = malloc(n * sizeof(pthread_t));
+	if (!tmp)
+		return (NULL);
+	return (tmp);
+}
+
+t_bool	meeting(int n, t_id **id, pthread_t **philos)
+{
+	*philos = create_philosophers(n);
+	if (!philos)
+		return (FALSE);
+	*id = get_id_card(n);
+	if (!id)
+		return (FALSE);
+	return (TRUE);
+}
+
+t_bool	be_philosopher(int n, t_shr_data *data, void *(routine) (void *))
 {
 	int			i;
-	t_bool		hashi[n];
-	t_id		id[n];
-	pthread_t	philos[n];
+	t_id		*id;
+	pthread_t	*philos;
 
 	i = 0;
-	fill_array(n, id, data, hashi);
-	pthread_mutex_init(&data->mutex, NULL);
+	if (!meeting(n, &id, &philos))
+		return (FALSE);
+	pthread_mutex_init(&data->dy.mutex, NULL);
 	while (i < n)
 	{
-		id[i].share = data;
+		id[i].share = *data;
+		id[i].timer = (*data).st.start;
 		if (pthread_create(&philos[i], NULL, routine, &id[i])) /*Routine has to be a loop?*/
 			return (FALSE);
 		i++;
@@ -52,6 +90,7 @@ t_bool	be_philosopher(int n, t_data *data, void *(routine) (void *))
 	i = 0;
 	while (i < n)
 		pthread_join(philos[i++], NULL);
-	pthread_mutex_destroy(&data->mutex);
+	pthread_mutex_destroy(&data->dy.mutex);
+	clean_mng(id, philos);
 	return (TRUE);
 }
