@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/01 17:13:12 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/08 14:34:47 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/10 09:48:37 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,12 @@
 # include <pthread.h>
 
 /*** ** STUCTS * ***/
-typedef struct s_data
+
+typedef enum e_hand
 {
-	int	people;
-	int	death;
-	int	eat;
-	int	sleep;
-	int	times;
-	int	shared_data;
-}	t_data;
+	R = 0,
+	L
+}	t_hand;
 
 typedef enum e_bool
 {
@@ -38,10 +35,36 @@ typedef enum e_bool
 	TRUE = 1
 }	t_bool;
 
+typedef enum s_pr_crr_nx
+{
+	PREV = 0,
+	CURR,
+	NEXT,
+}	t_pr_crr_nx;
+
+typedef struct s_data
+{
+	int				people;
+	int				death;
+	int				eat;
+	int				rest;
+	int				times;
+	t_bool			*hashi;
+	pthread_mutex_t	mutex;
+}	t_data;
+
+typedef struct s_id
+{
+	int				id;
+	t_bool			owned[2];
+	int				timer;
+	struct s_data	*share;
+}	t_id;
+
 /***  FUNCTIONS  ***/
 
-void    	*routine_mng(void *data);
-t_bool		be_philosopher(void *data, void *(routine) (void *));
+void		*routine_mng(void *data);
+t_bool		be_philosopher(int n, t_data *data, void *(routine) (void *));
 
 /*** ** UTILS ** ***/
 void		ft_isspace(const char *str, int *i);
