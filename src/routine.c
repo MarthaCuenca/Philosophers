@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 19:59:34 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/10 09:59:07 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/10 12:23:55 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,38 @@ void	think(void)
 	usleep(20);
 }
 
+void	leave_hashi(t_id *single, t_data *share, int curr, int next)
+{
+	pthread_mutex_lock(&share->mutex);
+	if (single->hand[R] == TRUE)
+	{
+		single->hand[R] = FALSE;
+		share->hashi[curr] = TRUE;
+	}
+	else
+	{
+		single->hand[L] = FALSE;
+		share->hashi[next] = TRUE;
+	}
+	pthread_mutex_unlock(&share->mutex);
+}
+
+void	take_hashi(t_id *single, t_data *share, int curr, int next)
+{
+	pthread_mutex_lock(&share->mutex);
+	if (share->hashi[curr] == TRUE)
+	{
+		share->hashi[curr] = FALSE;
+		single->hand[R] = TRUE;
+	}
+	if (share->hashi[next] == TRUE)
+	{
+		share->hashi[next] = FALSE;
+		single->hand[L] = TRUE;
+	}
+	pthread_mutex_unlock(&share->mutex);
+}
+
 t_bool	pair_of_hashi(t_id *single, t_data *share)
 {
 	int				id[3];
@@ -29,19 +61,16 @@ t_bool	pair_of_hashi(t_id *single, t_data *share)
 	id[NEXT] = single->id + 1;
 	if (id[NEXT] > share->people - 1)
 		id[NEXT] = 0;
-	if (share->hashi[id[CURR]] == TRUE)
-	{
-		share->hashi[id[CURR]] = FALSE;
-		single->owned[0] = TRUE;
-	}
-	if (share->hashi[id[NEXT]] == TRUE)
-	{
-		share->hashi[id[NEXT]] = FALSE;
-		single->owned[1] = TRUE;
-	}
 	pthread_mutex_unlock(&share->mutex);
-	if (single->owned[0] == TRUE && single->owned[1] == TRUE)
-		return (printf("timestamp_in_ms %i has taken a fork\n", single->id), TRUE);
+	leave_hashi(single, share, id[CURR], id[NEXT]);
+	take_hashi(single, share, id[CURR], id[NEXT]);
+	if (single->hand[R] == TRUE && single->hand[L] == TRUE)
+	{
+		pthread_mutex_lock(&share->mutex);
+		printf("timestamp_in_ms %i has taken a fork\n", single->id);
+		pthread_mutex_unlock(&share->mutex);
+		return (TRUE);
+	}
 	return (FALSE);
 }
 
@@ -52,23 +81,27 @@ void	eat(t_id *single, t_data *share)
 
 	id[CURR] = single->id;
 	id[NEXT] = single->id + 1;
-	if (id[NEXT] > share->people)
+	if (id[NEXT] > share->people - 1)
 		id[NEXT] = 0;
 	t = 0;
 	while (t < share->eat)
 		t++;
 	pthread_mutex_lock(&share->mutex);
+	printf("timestamp_in_ms %i is eating\n", single->id);
 	share->hashi[id[CURR]] = TRUE;
-	single->owned[0] = FALSE;
+	single->hand[R] = FALSE;
 	pthread_mutex_unlock(&share->mutex);
 	pthread_mutex_lock(&share->mutex);
 	share->hashi[id[NEXT]] = TRUE;
-	single->owned[1] = FALSE;
+	single->hand[L] = FALSE;
 	pthread_mutex_unlock(&share->mutex);
 }
 
 void	dream(t_id *single, t_data *share)
 {
+	pthread_mutex_lock(&share->mutex);
+	printf("timestamp_in_ms %i is sleeping\n", single->id);
+	pthread_mutex_unlock(&share->mutex);
 	single->timer = 0;
 	while (single->timer < share->rest)
 	{
@@ -85,6 +118,9 @@ void	*routine_mng(void *data)
 
 	single = (t_id *)data;
 	share = ((t_id *)data)->share;
+	pthread_mutex_lock(&share->mutex);
+	printf("timestamp_in_ms %i is thinking\n", single->id);
+	pthread_mutex_unlock(&share->mutex);
 	while (pair_of_hashi(single, share) == FALSE)
 		think();/*During x time I check after some time*/
 				/*I have to check if philo is alive*/
