@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/01 16:29:57 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/10 19:35:25 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/11 10:43:27 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,10 @@ t_bool	*create_hashi(t_no_mod *st)
 		return (NULL);
 	i = 0;
 	while (i < st->people)
-		tmp[i++] = TRUE;
+	{
+		tmp[i] = TRUE;
+		i++;
+	}
 	return (tmp);
 }
 
@@ -80,8 +83,8 @@ int	main(int argc, char **argv)
 	dy.hashi = create_hashi(&st);
 	if (!dy.hashi)
 		return (1);
-	data.st = st;
-	data.dy = dy;
-	be_philosopher(data.st.people, &data, routine_mng);
+	data.st = &st;
+	data.dy = &dy;
+	be_philosopher(data.st->people, &data, routine_mng);
 	return (0);
 }

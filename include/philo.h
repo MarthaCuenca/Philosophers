@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/01 17:13:12 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/10 18:39:06 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/11 10:42:53 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,8 @@ typedef struct s_no_mod
 
 typedef	struct s_shr_data
 {
-	struct s_no_mod	st;
-	struct s_mod	dy;
+	struct s_no_mod	*st;
+	struct s_mod	*dy;
 }	t_shr_data;
 
 typedef struct s_id
@@ -72,7 +72,7 @@ typedef struct s_id
 	int					id;
 	t_bool				hand[2];
 	int					timer;
-	struct s_shr_data	share;
+	struct s_shr_data	*share;
 }	t_id;
 
 /***  FUNCTIONS  ***/
