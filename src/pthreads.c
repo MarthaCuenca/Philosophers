@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 19:57:53 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/10 19:50:23 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/11 10:44:51 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 void	clean_mng(t_id *data, pthread_t *philos)
 {
-	free(data->share.dy.hashi);
+	free(data->share->dy->hashi);
 	free(data);
 	free(philos);
 }
@@ -78,11 +78,11 @@ t_bool	be_philosopher(int n, t_shr_data *data, void *(routine) (void *))
 	i = 0;
 	if (!meeting(n, &id, &philos))
 		return (FALSE);
-	pthread_mutex_init(&data->dy.mutex, NULL);
+	pthread_mutex_init(&data->dy->mutex, NULL);
 	while (i < n)
 	{
-		id[i].share = *data;
-		id[i].timer = (*data).st.start;
+		id[i].share = data;
+		id[i].timer = data->st->start;
 		if (pthread_create(&philos[i], NULL, routine, &id[i])) /*Routine has to be a loop?*/
 			return (FALSE);
 		i++;
@@ -90,7 +90,7 @@ t_bool	be_philosopher(int n, t_shr_data *data, void *(routine) (void *))
 	i = 0;
 	while (i < n)
 		pthread_join(philos[i++], NULL);
-	pthread_mutex_destroy(&data->dy.mutex);
+	pthread_mutex_destroy(&data->dy->mutex);
 	clean_mng(id, philos);
 	return (TRUE);
 }
