@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/01 16:29:57 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/11 10:43:27 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/12 17:54:52 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 #include <stdio.h>
 #include <sys/time.h>
 
-unsigned long long	ft_conversion(unsigned long long src, int factor, char op)
+unsigned long	ft_conversion(unsigned long long src, int factor, char op)
 {
-	unsigned long long	target;
+	unsigned long	target;
 
 	target = 0;
 	if (op == '*')
@@ -43,6 +43,29 @@ t_bool	*create_hashi(t_no_mod *st)
 	return (tmp);
 }
 
+t_bool	are_unsign(char **argv, t_no_mod *st)
+{
+	st->people = ft_atoi(argv[1]);
+	if (st->people <= 0)
+		return (FALSE);
+	st->death = ft_atoi(argv[2]);
+	if (st->death <= 0)
+		return (FALSE);
+	st->eat = ft_atoi(argv[3]);
+	if (st->eat <= 0)
+		return (FALSE);
+	st->rest = ft_atoi(argv[4]);
+	if (st->rest <= 0)
+		return (FALSE);
+	if (argv[5])
+	{
+		st->times = ft_atoi(argv[5]);
+	if (st->times <= 0)
+		return (FALSE);
+	}
+	return (TRUE);
+}
+
 t_bool	are_int(char **argv, t_no_mod *st)
 {
 	int	j;
@@ -53,19 +76,11 @@ t_bool	are_int(char **argv, t_no_mod *st)
 		if (!ft_str_isdigit(argv[j++]))
 			return (FALSE);
 	}
-	st->people = ft_atoi(argv[1]);
-	st->death = ft_atoi(argv[2]);
-	st->eat = ft_atoi(argv[3]);
-	st->rest = ft_atoi(argv[4]);
-	if (argv[5])
-		st->times = ft_atoi(argv[5]);
+	if (!are_unsign(argv, st))
+		return (FALSE);
 	return (TRUE);
 }
 
-/*pillo el timepo al inicio
-//pillo el tiempo cuando empiece a comer
-//covierto de um a ml
-//resto el tiempo*/
 int	main(int argc, char **argv)
 {
 	t_shr_data		data;
@@ -81,10 +96,11 @@ int	main(int argc, char **argv)
 		return (1);
 	st.start = ft_conversion(us.tv_usec, 1000, '/');
 	dy.hashi = create_hashi(&st);
+	dy.time_up = FALSE;
 	if (!dy.hashi)
 		return (1);
 	data.st = &st;
 	data.dy = &dy;
-	be_philosopher(data.st->people, &data, routine_mng);
+	be_philosopher(&data);
 	return (0);
 }

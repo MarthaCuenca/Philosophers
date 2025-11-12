@@ -6,7 +6,7 @@
 #    By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/01 16:07:45 by mcuenca-          #+#    #+#              #
-#    Updated: 2025/11/06 14:18:56 by mcuenca-         ###   ########.fr        #
+#    Updated: 2025/11/12 17:47:54 by mcuenca-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,7 @@ HEADER= include/philo.h
 SRCS_DIR= src
 SRCS= src/main.c \
 	  src/pthreads.c \
+	  src/monitoring.c \
 	  src/routine.c
 
 UTILS_DIR= src/utils

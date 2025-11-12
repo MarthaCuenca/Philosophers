@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 19:57:53 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/11 10:44:51 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/12 17:59:29 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,27 +69,40 @@ t_bool	meeting(int n, t_id **id, pthread_t **philos)
 	return (TRUE);
 }
 
-t_bool	be_philosopher(int n, t_shr_data *data, void *(routine) (void *))
+
+t_bool	init_philosophers(t_id *id, t_shr_data *share, pthread_t *philos)
 {
-	int			i;
-	t_id		*id;
-	pthread_t	*philos;
+	int	i;
+	int	n;
 
 	i = 0;
-	if (!meeting(n, &id, &philos))
-		return (FALSE);
-	pthread_mutex_init(&data->dy->mutex, NULL);
+	n = share->st->people;
 	while (i < n)
 	{
-		id[i].share = data;
-		id[i].timer = data->st->start;
-		if (pthread_create(&philos[i], NULL, routine, &id[i])) /*Routine has to be a loop?*/
+		id[i].share = share;
+		id[i].timer = share->st->start;
+		id[i].i = 0;	
+		if (pthread_create(&philos[i], NULL, routine_mng, &id[i]))//&& data->dy->time_up == FALSE) 
 			return (FALSE);
 		i++;
 	}
 	i = 0;
 	while (i < n)
 		pthread_join(philos[i++], NULL);
+	return (TRUE);
+}
+
+t_bool	be_philosopher(t_shr_data *data)//, void *(routine) (void *))
+{
+	t_id		*id;
+	pthread_t	monitor;
+	pthread_t	*philos;
+
+	if (!meeting(data->st->people, &id, &philos))
+		return (FALSE);
+	pthread_mutex_init(&data->dy->mutex, NULL);
+	monitoring_mng(&monitor, data);
+	init_philosophers(id, data, philos);
 	pthread_mutex_destroy(&data->dy->mutex);
 	clean_mng(id, philos);
 	return (TRUE);
