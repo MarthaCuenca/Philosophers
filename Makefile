@@ -6,7 +6,7 @@
 #    By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/01 16:07:45 by mcuenca-          #+#    #+#              #
-#    Updated: 2025/11/12 17:47:54 by mcuenca-         ###   ########.fr        #
+#    Updated: 2025/11/14 13:47:51 by mcuenca-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,9 @@ UTILS= src/utils/ft_isspace.c \
 	   src/utils/ft_memset.c \
 	   src/utils/ft_bzero.c \
 	   src/utils/ft_calloc.c \
-	   src/utils/ft_atoi.c
+	   src/utils/ft_atoi.c \
+	   src/utils/philo_clean_mng.c \
+	   src/utils/philo_utils.c
 
 OBJS_DIR= obj_philo
 OBJS= $(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o) \
