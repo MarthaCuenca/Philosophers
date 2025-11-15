@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 17:48:09 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/14 14:42:44 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/15 16:41:12 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,40 +16,42 @@
 #include <stdio.h>
 #include <pthread.h>
 
-void	*watchman(void *data)
+void is_alive(t_shr_data *share)
 {
-	/*int			i;
-	t_ms		now;
-	t_shr_data	*share;
-
-	share = (t_shr_data *)data;
-	while (share->dy->time_up == FALSE)
-	{
-		now = curr_time();
-		i = 0;
-		while (i < share->st->people)
-		{
-			if ((now - share->dy->timer[i]) > share->st->death)
-			{
-				pthread_mutex_lock(&share->dy->mutex);	
-				share->dy->time_up = TRUE;
-				printf("      %li %i died\n", curr_time(), i);
-				pthread_mutex_unlock(&share->dy->mutex);
-				return (NULL);
-			}
-			i++;
-		}
-		usleep(100);
-		//pthread_mutex_unlock(&share->dy->mutex);	
-	}
-	return (NULL);*/
 	int			i;
-	t_shr_data	*share;
+	t_ms		now;
 
-	share = (t_shr_data *)data;
 	i = 0;
 	while (i < share->st->people)
+	{
+		now = curr_time();
+		pthread_mutex_lock(&share->dy->mutex);
+		if ((now - share->dy->timer[i]) > share->st->death)
+		{
+			pthread_mutex_unlock(&share->dy->mutex);
+			printf("      %li %i died\n", curr_time(), i);
+			share->dy->time_up = TRUE;
+			break ;
+		}
+		pthread_mutex_unlock(&share->dy->mutex);
 		i++;
+	}
+}
+
+void	*watchman(void *data)
+{
+	t_shr_data	*share;
+
+	share = (t_shr_data *)data;
+	pthread_mutex_lock(&share->dy->mutex);
+	while (!share->dy->time_up)
+	{
+		pthread_mutex_unlock(&share->dy->mutex);
+		is_alive(share);
+		usleep(100);
+		pthread_mutex_lock(&share->dy->mutex);
+	}
+	pthread_mutex_unlock(&share->dy->mutex);
 	return (NULL);
 }
 

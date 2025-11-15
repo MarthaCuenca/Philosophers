@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/01 16:29:57 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/14 14:41:05 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/14 14:53:15 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,6 +152,7 @@ int	main(int argc, char **argv)
 		return (1);
 	data.st = &st;
 	data.dy = &dy;
+	data.dy->time_up = FALSE;
 	id = get_id_card(data.st->people, &data);
 	if (!id)
 		return (clean_mng(id, NULL, NULL), 1);

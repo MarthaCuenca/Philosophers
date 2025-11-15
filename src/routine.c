@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 19:59:34 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/14 14:44:40 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/15 15:43:58 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	eat(t_id *single, t_shr_data *share)
 	single->hand[R] = FALSE;
 	single->hand[L] = FALSE;
 	pthread_mutex_lock(&share->dy->mutex);
-	//share->dy->timer[single->id] = curr_time();
+	share->dy->timer[single->id] = curr_time();
 	printf("%li %i is eating\n", curr_time(), single->id);
 	share->dy->hashi[id[CURR]] = TRUE;
 	share->dy->hashi[id[NEXT]] = TRUE;
@@ -106,16 +106,18 @@ void	*routine_mng(void *data)
 
 	single = (t_id *)data;
 	share = ((t_id *)data)->share;
-	//while (share->dy->time_up == FALSE)
-	//{
 	pthread_mutex_lock(&share->dy->mutex);
 	share->dy->timer[single->id] = curr_time();
-	printf("%li %i is thinking\n", curr_time(), single->id);
+	while (!share->dy->time_up)
+	{
+		printf("%li %i is thinking\n", curr_time(), single->id);
+		pthread_mutex_unlock(&share->dy->mutex);
+		while (pair_of_hashi(single, share) == FALSE)
+			think();
+		eat(single, share);
+		dream(single, share);
+		pthread_mutex_lock(&share->dy->mutex);
+	}
 	pthread_mutex_unlock(&share->dy->mutex);
-	while (pair_of_hashi(single, share) == FALSE)
-		think();
-	eat(single, share);
-	dream(single, share);
-	//}
 	return (NULL);
 }
