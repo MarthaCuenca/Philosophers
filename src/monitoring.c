@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 17:48:09 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/15 16:41:12 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/17 18:57:22 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include <pthread.h>
 
-void is_alive(t_shr_data *share)
+void	is_alive(t_shr_data *share)
 {
 	int			i;
 	t_ms		now;
@@ -24,13 +24,13 @@ void is_alive(t_shr_data *share)
 	i = 0;
 	while (i < share->st->people)
 	{
-		now = curr_time();
+		now = curr_time(share->st->start);
 		pthread_mutex_lock(&share->dy->mutex);
 		if ((now - share->dy->timer[i]) > share->st->death)
 		{
-			pthread_mutex_unlock(&share->dy->mutex);
-			printf("      %li %i died\n", curr_time(), i);
 			share->dy->time_up = TRUE;
+			pthread_mutex_unlock(&share->dy->mutex);
+			print_activity(i, share, DIE);
 			break ;
 		}
 		pthread_mutex_unlock(&share->dy->mutex);

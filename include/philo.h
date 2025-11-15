@@ -6,12 +6,23 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/01 17:13:12 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/14 13:50:04 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/17 19:00:14 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
+
+# define ANSI_COLOR_RED     "\x1b[31m"
+# define ANSI_COLOR_GREEN   "\x1b[32m"
+# define ANSI_COLOR_YELLOW  "\x1b[38;5;229m"//\x1b[33m
+# define ANSI_COLOR_BLUE    "\x1b[34m"
+# define ANSI_COLOR_MAGENTA "\x1b[35m"
+# define ANSI_COLOR_CYAN    "\x1b[36m"
+# define ANSI_COLOR_RESET   "\x1b[0m"
+
+# define COLOR_BOLD  "\x1b[1m"
+# define COLOR_OFF   "\x1b[22m"
 
 # define MAX_INT_CHAR "2147483647"
 # define MIN_INT_CHAR "2147483648"
@@ -23,7 +34,7 @@
 
 /*** ** STUCTS * ***/
 
-typedef long t_ms;
+typedef long	t_ms;
 
 typedef enum e_hand
 {
@@ -44,6 +55,16 @@ typedef enum s_pr_crr_nx
 	NEXT,
 }	t_pr_crr_nx;
 
+typedef enum s_activity
+{
+	FORK = 0,
+	R_FORK,
+	L_FORK,
+	EAT,
+	SLEEP,
+	THINK,
+	DIE
+}	t_activity;
 
 typedef struct s_mod
 {
@@ -63,7 +84,7 @@ typedef struct s_no_mod
 	t_ms			start;
 }	t_no_mod;
 
-typedef	struct s_shr_data
+typedef struct s_shr_data
 {
 	struct s_no_mod	*st;
 	struct s_mod	*dy;
@@ -90,8 +111,9 @@ int				ft_str_isdigit(const char *str);
 void			*ft_memset(void *s, int c, size_t n);
 void			ft_bzero(void *s, size_t n);
 int				ft_atoi(const char *nptr);
-t_ms			curr_time();
+t_ms			curr_time(t_ms start);
 unsigned long	ft_conversion(unsigned long long src, int factor, char op);
 void			clean_mng(t_id *data, pthread_t *philos, pthread_t *monitor);
 void			aru(void *tmp);
+void			print_activity(int id, t_shr_data *share, t_activity task);
 #endif

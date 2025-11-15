@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 19:59:34 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/15 15:43:58 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/17 18:57:51 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,6 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <pthread.h>
-#include <sys/time.h>
-
-t_ms	curr_time(void)
-{
-	t_ms			ms;
-	struct timeval	us;
-
-	if (gettimeofday(&us, NULL))
-		return (0);
-	ms = ft_conversion(us.tv_usec, 1000, '/');
-	return (ms);
-}
 
 void	think(void)
 {
@@ -65,7 +53,7 @@ t_bool	pair_of_hashi(t_id *single, t_shr_data *share)
 	if (single->hand[R] == TRUE && single->hand[L] == TRUE)
 	{
 		pthread_mutex_lock(&share->dy->mutex);
-		printf("%li %i has taken a fork\n", curr_time(), single->id);
+		print_activity(single->id, share, FORK);
 		pthread_mutex_unlock(&share->dy->mutex);
 		return (TRUE);
 	}
@@ -84,8 +72,8 @@ void	eat(t_id *single, t_shr_data *share)
 	single->hand[R] = FALSE;
 	single->hand[L] = FALSE;
 	pthread_mutex_lock(&share->dy->mutex);
-	share->dy->timer[single->id] = curr_time();
-	printf("%li %i is eating\n", curr_time(), single->id);
+	share->dy->timer[single->id] = curr_time(0);
+	print_activity(single->id, share, EAT);
 	share->dy->hashi[id[CURR]] = TRUE;
 	share->dy->hashi[id[NEXT]] = TRUE;
 	pthread_mutex_unlock(&share->dy->mutex);
@@ -94,7 +82,7 @@ void	eat(t_id *single, t_shr_data *share)
 void	dream(t_id *single, t_shr_data *share)
 {
 	pthread_mutex_lock(&share->dy->mutex);
-	printf("%li %i is sleeping\n", curr_time(), single->id);
+	print_activity(single->id, share, SLEEP);
 	pthread_mutex_unlock(&share->dy->mutex);
 	usleep(ft_conversion(share->st->rest, 1000, '*'));
 }
@@ -107,10 +95,10 @@ void	*routine_mng(void *data)
 	single = (t_id *)data;
 	share = ((t_id *)data)->share;
 	pthread_mutex_lock(&share->dy->mutex);
-	share->dy->timer[single->id] = curr_time();
+	share->dy->timer[single->id] = 0;
 	while (!share->dy->time_up)
 	{
-		printf("%li %i is thinking\n", curr_time(), single->id);
+		print_activity(single->id, share, THINK);
 		pthread_mutex_unlock(&share->dy->mutex);
 		while (pair_of_hashi(single, share) == FALSE)
 			think();

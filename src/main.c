@@ -6,28 +6,13 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/01 16:29:57 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/14 14:53:15 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/17 18:32:10 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include <stdio.h>
 #include <sys/time.h>
-
-/*void	clean_mng(t_id *data, pthread_t *philos, pthread_t *monitor)
-{
-	int	i;
-
-	i = 0;
-	while (i < data->share->st->people)
-		pthread_join(philos[i++], NULL);
-	pthread_join(*monitor, NULL);
-	pthread_mutex_destroy(&data->share->dy->mutex);
-	free(data->share->dy->hashi);
-	free(data->share->dy->timer);
-	free(data);
-	free(philos);
-}*/
 
 t_id	*get_id_card(int n, t_shr_data *share)
 {
@@ -151,6 +136,7 @@ int	main(int argc, char **argv)
 	if (!create_share_data(&dy, &st))
 		return (1);
 	data.st = &st;
+	data.st->start = curr_time(0);
 	data.dy = &dy;
 	data.dy->time_up = FALSE;
 	id = get_id_card(data.st->people, &data);
