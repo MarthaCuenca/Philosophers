@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/01 17:13:12 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/11 10:42:53 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/15 17:16:39 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 
 /*** ** STUCTS * ***/
 
-typedef unsigned long t_ms;
+typedef long t_ms;
 
 typedef enum e_hand
 {
@@ -48,6 +48,8 @@ typedef enum s_pr_crr_nx
 typedef struct s_mod
 {
 	t_bool			*hashi;
+	t_bool			time_up;
+	t_ms			*timer;
 	pthread_mutex_t	mutex;
 }	t_mod;
 
@@ -71,21 +73,25 @@ typedef struct s_id
 {
 	int					id;
 	t_bool				hand[2];
-	int					timer;
+	int					i;
 	struct s_shr_data	*share;
 }	t_id;
 
 /***  FUNCTIONS  ***/
 
-void				*routine_mng(void *data);
-t_bool				be_philosopher(int n, t_shr_data *data, void *(routine) (void *));
+void			*routine_mng(void *data);
+void			be_philosopher(t_id *data);
+t_bool			monitoring_mng(pthread_t *monitoring, t_shr_data *share);
 
 /*** ** UTILS ** ***/
-void				ft_isspace(const char *str, int *i);
-int					ft_isdigit(int c);
-int					ft_str_isdigit(const char *str);
-void				*ft_memset(void *s, int c, size_t n);
-void				ft_bzero(void *s, size_t n);
-int					ft_atoi(const char *nptr);
-unsigned long long	ft_conversion(unsigned long long src, int factor, char op);
+void			ft_isspace(const char *str, int *i);
+int				ft_isdigit(int c);
+int				ft_str_isdigit(const char *str);
+void			*ft_memset(void *s, int c, size_t n);
+void			ft_bzero(void *s, size_t n);
+int				ft_atoi(const char *nptr);
+t_ms			curr_time();
+unsigned long	ft_conversion(unsigned long long src, int factor, char op);
+void			clean_mng(t_id *data, pthread_t *philos, pthread_t *monitor);
+void			aru(void *tmp);
 #endif
