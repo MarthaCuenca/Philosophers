@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/01 16:29:57 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/15 17:17:46 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/17 19:15:11 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,10 +122,6 @@ t_bool	are_int(char **argv, t_no_mod *st)
 	return (TRUE);
 }
 
-/*pillo el timepo al inicio
-//pillo el tiempo cuando empiece a comer
-//covierto de um a ml
-//resto el tiempo*/
 int	main(int argc, char **argv)
 {
 	t_shr_data		data;
@@ -140,6 +136,7 @@ int	main(int argc, char **argv)
 	if (!create_share_data(&dy, &st))
 		return (1);
 	data.st = &st;
+	data.st->start = curr_time(0);
 	data.dy = &dy;
 	data.dy->time_up = FALSE;
 	id = get_id_card(data.st->people, &data);
