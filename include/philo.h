@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/01 17:13:12 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/17 19:00:14 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/18 13:48:38 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,14 +48,14 @@ typedef enum e_bool
 	TRUE = 1
 }	t_bool;
 
-typedef enum s_pr_crr_nx
+typedef enum e_pr_crr_nx
 {
 	PREV = 0,
 	CURR,
 	NEXT,
 }	t_pr_crr_nx;
 
-typedef enum s_activity
+typedef enum e_activity
 {
 	FORK = 0,
 	R_FORK,
@@ -66,12 +66,20 @@ typedef enum s_activity
 	DIE
 }	t_activity;
 
+typedef enum e_mutex
+{
+	HASHI = 0,
+	T_UP,
+	TIMER,
+	PRINT
+}	t_mutex;
+
 typedef struct s_mod
 {
 	t_bool			*hashi;
 	t_bool			time_up;
 	t_ms			*timer;
-	pthread_mutex_t	mutex;
+	pthread_mutex_t	mutex[4];
 }	t_mod;
 
 typedef struct s_no_mod

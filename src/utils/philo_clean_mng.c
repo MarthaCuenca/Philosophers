@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 18:58:31 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/17 19:01:37 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/19 15:13:18 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,10 @@ void	clean_mng(t_id *data, pthread_t *philos, pthread_t *monitor)
 	if (philos || monitor)
 	{
 		wait_pthreads(data->share->st->people, philos, monitor);
-		pthread_mutex_destroy(&data->share->dy->mutex);
+		pthread_mutex_destroy(&data->share->dy->mutex[T_UP]);
+		pthread_mutex_destroy(&data->share->dy->mutex[TIMER]);
+		pthread_mutex_destroy(&data->share->dy->mutex[HASHI]);
+		pthread_mutex_destroy(&data->share->dy->mutex[PRINT]);
 	}
 	free(data->share->dy->hashi);
 	data->share->dy->hashi = NULL;
