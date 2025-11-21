@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 18:58:31 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/19 15:13:18 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/19 18:18:28 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,27 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-void	wait_pthreads(int n, pthread_t *philos, pthread_t *monitor)
+void	clean_pthreads(t_shr_data *share, pthread_t *philos, pthread_t *monitor)
 {
 	int	i;
+	int	n;
 
 	i = 0;
-	if (philos)
-		while (i < n)
-			pthread_join(philos[i++], NULL);
-	if (monitor)
-		pthread_join(*monitor, NULL);
+	n = share->st->people;
+	while (i < n)
+		pthread_join(philos[i++], NULL);
+	pthread_join(*monitor, NULL);
+	pthread_mutex_destroy(&share->dy->mutex[T_UP]);
+	pthread_mutex_destroy(&share->dy->mutex[TIMER]);
+	pthread_mutex_destroy(&share->dy->mutex[HASHI]);
+	pthread_mutex_destroy(&share->dy->mutex[PRINT]);
+	pthread_mutex_destroy(&share->dy->mutex[MEALS]);
 }
 
-void	clean_mng(t_id *data, pthread_t *philos, pthread_t *monitor)
+void	clean_mng(t_id *data, pthread_t *philos,
+			pthread_t *monitor)
 {
-	if (philos || monitor)
-	{
-		wait_pthreads(data->share->st->people, philos, monitor);
-		pthread_mutex_destroy(&data->share->dy->mutex[T_UP]);
-		pthread_mutex_destroy(&data->share->dy->mutex[TIMER]);
-		pthread_mutex_destroy(&data->share->dy->mutex[HASHI]);
-		pthread_mutex_destroy(&data->share->dy->mutex[PRINT]);
-	}
+	clean_pthreads(data->share, philos, monitor);
 	free(data->share->dy->hashi);
 	data->share->dy->hashi = NULL;
 	free(data->share->dy->timer);

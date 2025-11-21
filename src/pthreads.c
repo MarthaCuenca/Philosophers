@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 19:57:53 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/19 15:12:36 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/19 20:22:00 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,12 @@ void	be_philosopher(t_id *id)
 	pthread_mutex_init(&id->share->dy->mutex[TIMER], NULL);
 	pthread_mutex_init(&id->share->dy->mutex[HASHI], NULL);
 	pthread_mutex_init(&id->share->dy->mutex[PRINT], NULL);
+	pthread_mutex_init(&id->share->dy->mutex[MEALS], NULL);
 	if (!monitoring_mng(&monitor, id->share))
 		return (clean_mng(id, NULL, NULL));
 	philos = create_philosophers(id->share->st->people);
 	if (!philos)
-		return (clean_mng(id, NULL, NULL));
+		return (clean_mng(id, NULL, &monitor));
 	if (!init_philosophers(id, id->share, philos))
 		return (clean_mng(id, philos, &monitor));
 	clean_mng(id, philos, &monitor);

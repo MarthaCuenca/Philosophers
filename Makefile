@@ -6,7 +6,7 @@
 #    By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/01 16:07:45 by mcuenca-          #+#    #+#              #
-#    Updated: 2025/11/17 16:44:58 by mcuenca-         ###   ########.fr        #
+#    Updated: 2025/11/19 19:13:50 by mcuenca-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,9 +17,12 @@ HEADER= include/philo.h
 
 SRCS_DIR= src
 SRCS= src/main.c \
+	  src/share_data.c \
 	  src/pthreads.c \
 	  src/monitoring.c \
-	  src/routine.c
+	  src/routine.c \
+	  src/hashi.c
+	  #src/feast.c \
 
 UTILS_DIR= src/utils
 UTILS= src/utils/ft_isspace.c \

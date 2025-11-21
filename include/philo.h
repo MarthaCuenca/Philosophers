@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/01 17:13:12 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/18 13:48:38 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/19 20:16:07 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,15 @@ typedef enum e_activity
 	EAT,
 	SLEEP,
 	THINK,
-	DIE
+	DIE,
+	ALL_FULL
 }	t_activity;
 
 typedef enum e_mutex
 {
 	HASHI = 0,
 	T_UP,
+	MEALS,
 	TIMER,
 	PRINT
 }	t_mutex;
@@ -78,8 +80,9 @@ typedef struct s_mod
 {
 	t_bool			*hashi;
 	t_bool			time_up;
+	int				meals;
 	t_ms			*timer;
-	pthread_mutex_t	mutex[4];
+	pthread_mutex_t	mutex[5];
 }	t_mod;
 
 typedef struct s_no_mod
@@ -107,10 +110,17 @@ typedef struct s_id
 }	t_id;
 
 /***  FUNCTIONS  ***/
-
-void			*routine_mng(void *data);
+t_bool			create_share_data(t_mod *dy, t_no_mod *st);
+t_bool			*create_hashi(t_no_mod *st);
+t_ms			*create_timer(t_no_mod *st);
+t_id			*get_id_card(int n, t_shr_data *share);
 void			be_philosopher(t_id *data);
+void			*routine_mng(void *data);
+t_bool			pair_of_hashi(t_id *single, t_shr_data *share, int curr, int next);
+void			leave_hashi(t_id *single, t_shr_data *share, 
+					int curr, int next);
 t_bool			monitoring_mng(pthread_t *monitoring, t_shr_data *share);
+t_bool			fest_mng(pthread_t *waiter, t_id *id);
 
 /*** ** UTILS ** ***/
 void			ft_isspace(const char *str, int *i);
@@ -119,9 +129,9 @@ int				ft_str_isdigit(const char *str);
 void			*ft_memset(void *s, int c, size_t n);
 void			ft_bzero(void *s, size_t n);
 int				ft_atoi(const char *nptr);
+void			reset_timer(t_ms start, t_ms *timer, pthread_mutex_t *mutex);
 t_ms			curr_time(t_ms start);
 unsigned long	ft_conversion(unsigned long long src, int factor, char op);
 void			clean_mng(t_id *data, pthread_t *philos, pthread_t *monitor);
-void			aru(void *tmp);
 void			print_activity(int id, t_shr_data *share, t_activity task);
 #endif

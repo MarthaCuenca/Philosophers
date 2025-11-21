@@ -6,14 +6,15 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 17:38:11 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/19 14:10:06 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/19 19:07:26 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include <stdio.h>
 
-void	print_activity_2(int id, pthread_mutex_t *mutex, t_ms now, t_activity task)
+void	print_activity_2(int id, pthread_mutex_t *mutex,
+			t_ms now, t_activity task)
 {
 	pthread_mutex_lock(&mutex[PRINT]);
 	if (task == FORK)
@@ -28,6 +29,8 @@ void	print_activity_2(int id, pthread_mutex_t *mutex, t_ms now, t_activity task)
 		printf("%li %i is sleeping\n", now, id);
 	else if (task == THINK)
 		printf("%li %i is thinking\n", now, id);
+	else if (task == ALL_FULL)
+		printf("*****Fest over, all philosophers has eaten!*****\n");
 	pthread_mutex_unlock(&mutex[PRINT]);
 }
 
