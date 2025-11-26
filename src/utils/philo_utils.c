@@ -6,20 +6,14 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 19:01:50 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/19 20:04:08 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/25 15:28:18 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+#include <unistd.h>
 #include <stdlib.h>
 #include <sys/time.h>
-
-void	reset_timer(t_ms start, t_ms *timer, pthread_mutex_t *mutex)
-{
-	pthread_mutex_lock(&mutex[TIMER]);
-	*timer = curr_time(start);
-	pthread_mutex_unlock(&mutex[TIMER]);
-}
 
 unsigned long	ft_conversion(unsigned long long src, int factor, char op)
 {
@@ -38,17 +32,16 @@ unsigned long	ft_conversion(unsigned long long src, int factor, char op)
 	return (target);
 }
 
-t_ms	curr_time(t_ms start)
+void	ft_ms_usleep(int n)
 {
-	t_ms			us_to_ms;
-	t_ms			s_to_ms;
-	t_ms			ms;
-	struct timeval	us;
+	usleep((useconds_t)n * 1000);
+}
 
-	if (gettimeofday(&us, NULL))
+t_ms	curr_time(void)
+{
+	struct timeval	tv;
+
+	if (gettimeofday(&tv, NULL))
 		return (0);
-	s_to_ms = ft_conversion(us.tv_sec, 1000, '*');
-	us_to_ms = ft_conversion(us.tv_usec, 1000, '/');
-	ms = (s_to_ms + us_to_ms) - start;
-	return (ms);
+	return ((tv.tv_sec * 1000) + tv.tv_usec / 1000);
 }

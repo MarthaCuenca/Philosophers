@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 19:59:34 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/19 20:21:56 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/26 18:13:26 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,63 +15,79 @@
 #include <stdio.h>
 #include <pthread.h>
 
-void	eat(t_id *single, t_shr_data *share, int curr, int next)
+void	think(t_id *single)
 {
-//	int	id[3];
-	usleep(ft_conversion(share->st->eat, 1000, '*'));
-	leave_hashi(single, share, curr, next);
-	reset_timer(share->st->start, &share->dy->timer[single->id], share->dy->mutex);
-	print_activity(single->id, share, EAT);
-	pthread_mutex_lock(&share->dy->mutex[MEALS]);
-	share->dy->meals++;
-	pthread_mutex_unlock(&share->dy->mutex[MEALS]);
-	single->i++;
+	print_activity(single->share, single->id, THINK);
 }
 
 void	dream(t_id *single, t_shr_data *share)
 {
-	print_activity(single->id, share, SLEEP);
-	usleep(ft_conversion(share->st->rest, 1000, '*'));
+	print_activity(single->share, single->id, SLEEP);
+	ft_ms_usleep(share->st->rest);
 }
 
-void	think(t_id *single, t_shr_data *share)
+void	add_meal(t_id *single, t_shr_data *share)
 {
-	print_activity(single->id, share, THINK);
-	usleep(20);
+	pthread_mutex_lock(&share->dy->mutex[MEALS]);
+	share->dy->meals_counter++;
+	pthread_mutex_unlock(&share->dy->mutex[MEALS]);
+	single->feed++;
 }
 
-void	init_some_data(t_id *single, t_shr_data *share, int *id)
+void	write_last_meal(t_id *single, t_shr_data *share)
 {
-	reset_timer(share->st->start, &share->dy->timer[single->id], share->dy->mutex);
-	id[CURR] = single->id;
-	id[NEXT] = single->id + 1;
-	if (id[NEXT] > share->st->people - 1)
-		id[NEXT] = 0;
+	t_ms	now;
+
+	now = curr_time();
+	pthread_mutex_lock(&share->dy->mutex[TIMER]);
+	single->last_meal = now;
+	pthread_mutex_unlock(&share->dy->mutex[TIMER]);
+}
+
+void	eat(t_id *single, t_shr_data *share)
+{
+	if (!take_hashi(single, share))
+		return ;
+
+	print_activity(share, single->id, EAT);
+	write_last_meal(single, share);
+	ft_ms_usleep(share->st->eat);
+	
+	leave_hashi(single, share);
+	
+	add_meal(single, share);
+}
+
+t_bool	check_own_full(t_id *single, t_shr_data *share)
+{
+	if (share->st->meals != 0)
+    {
+		if (single->feed >= share->st->meals)
+			return (TRUE);
+	}
+	return (FALSE);
 }
 
 void	*routine_mng(void *data)
 {
-	t_id		*single;
-	t_shr_data	*share;
-	int			id[3];
+	t_id        *single;
+	t_shr_data  *share;
 
 	single = (t_id *)data;
 	share = ((t_id *)data)->share;
-	init_some_data(single, share, id);
-	pthread_mutex_lock(&share->dy->mutex[T_UP]);
-	while (!share->dy->time_up)
+	if (single->evod == ODD)
+		usleep(50);
+	while (1)
 	{
-		pthread_mutex_unlock(&share->dy->mutex[T_UP]);
-		if (pair_of_hashi(single, share, id[CURR], id[NEXT]) == TRUE)
-		{
-			eat(single, share, id[CURR], id[NEXT]);
-			if (share->st->times != 0 && single->i >= share->st->times)
-				return (NULL);
-			dream(single, share);
-			think(single, share);
-		}
-		pthread_mutex_lock(&share->dy->mutex[T_UP]);
+		eat(single, share);
+		if (check_time_up(share) || check_own_full(single, share))
+			break ;
+		dream(single, share);
+		if (check_time_up(share))
+			break ;
+		think(single);
+		if (check_time_up(share))
+			break ;
 	}
-	pthread_mutex_unlock(&share->dy->mutex[T_UP]);
 	return (NULL);
 }

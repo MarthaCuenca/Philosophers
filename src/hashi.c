@@ -6,45 +6,54 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 19:13:20 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/21 17:04:26 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/26 18:17:20 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include <unistd.h>
 #include <pthread.h>
+#include <stdio.h>
 
-void	leave_hashi(t_id *single, t_shr_data *share, int curr, int next)
+void	leave_hashi(t_id *single, t_shr_data *share)
 {
-	pthread_mutex_lock(&share->dy->mutex[HASHI]);
-	share->dy->hashi[curr] = TRUE;
-	share->dy->hashi[next] = TRUE;
-	pthread_mutex_unlock(&share->dy->mutex[HASHI]);
-	single->hand[R] = FALSE;
-	single->hand[L] = FALSE;
-}
+	int	h1;
+	int	h2;
 
-void	take_hashi(t_id *single, t_shr_data *share, int curr, int next)
-{
-	pthread_mutex_lock(&share->dy->mutex[HASHI]);
-	share->dy->hashi[curr] = FALSE;
-	share->dy->hashi[next] = FALSE;
-	pthread_mutex_unlock(&share->dy->mutex[HASHI]);
-	single->hand[R] = TRUE;
-	single->hand[L] = TRUE;
-}
-
-t_bool	pair_of_hashi(t_id *single, t_shr_data *share, int curr, int next)
-{
-	leave_hashi(single, share, curr, next);
-	take_hashi(single, share, curr, next);
-	pthread_mutex_lock(&share->dy->mutex[HASHI]);
-	if (single->hand[R] == TRUE && single->hand[L] == TRUE)/*Actually it does not function in correct way. In fact check own forks, no shared forks.*/
+	if (single->id == share->st->people - 1)
 	{
-		pthread_mutex_unlock(&share->dy->mutex[HASHI]);
-		print_activity(single->id, share, FORK);
-		return (TRUE);
+		h1 = single->hand[R];
+		h2 = single->hand[L];
 	}
-	pthread_mutex_unlock(&share->dy->mutex[HASHI]);
-	return (FALSE);
+	else
+	{
+		h1 = single->hand[L];
+		h2 = single->hand[R];
+	}
+	pthread_mutex_unlock(&share->dy->h_mtx[h1]);
+	pthread_mutex_unlock(&share->dy->h_mtx[h2]);
+}
+
+t_bool	take_hashi(t_id *single, t_shr_data *share)
+{
+	int	h1;
+	int	h2;
+
+	if (single->id == share->st->people - 1)
+	{
+		h1 = single->hand[L];
+		h2 = single->hand[R];
+	}
+	else
+	{
+		h1 = single->hand[R];
+		h2 = single->hand[L];
+	}
+	if (check_time_up(share))
+		return (FALSE);
+	pthread_mutex_lock(&share->dy->h_mtx[h1]);
+	print_activity(share, single->id, FORK);
+	pthread_mutex_lock(&share->dy->h_mtx[h2]);
+	print_activity(share, single->id, FORK);
+	return (TRUE);
 }

@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 19:57:53 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/19 20:22:00 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/26 13:55:13 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <pthread.h>
 #include <stdio.h>
 
-pthread_t	*create_philosophers(int n)
+pthread_t	*create_philosophers(int n)//AQUI ALGO
 {
 	pthread_t	*tmp;
 
@@ -26,17 +26,15 @@ pthread_t	*create_philosophers(int n)
 	return (tmp);
 }
 
-t_bool	init_philosophers(t_id *id, t_shr_data *share, pthread_t *philos)
+t_bool	init_philosophers(t_id *id, pthread_t *philos)
 {
 	int	i;
-	int	n;
+	int	people;
 
 	i = 0;
-	n = share->st->people;
-	while (i < n)
+	people = id->share->st->people;
+	while (i < people)
 	{
-		id[i].share = share;
-		id[i].i = 0;
 		if (pthread_create(&philos[i], NULL, routine_mng, &id[i]))
 			return (FALSE);
 		i++;
@@ -44,22 +42,10 @@ t_bool	init_philosophers(t_id *id, t_shr_data *share, pthread_t *philos)
 	return (TRUE);
 }
 
-void	be_philosopher(t_id *id)
+void	be_philosopher(t_id *id, pthread_t *philos)
 {
-	pthread_t	monitor;
-	pthread_t	*philos;
-
-	pthread_mutex_init(&id->share->dy->mutex[T_UP], NULL);
-	pthread_mutex_init(&id->share->dy->mutex[TIMER], NULL);
-	pthread_mutex_init(&id->share->dy->mutex[HASHI], NULL);
-	pthread_mutex_init(&id->share->dy->mutex[PRINT], NULL);
-	pthread_mutex_init(&id->share->dy->mutex[MEALS], NULL);
-	if (!monitoring_mng(&monitor, id->share))
-		return (clean_mng(id, NULL, NULL));
-	philos = create_philosophers(id->share->st->people);
-	if (!philos)
-		return (clean_mng(id, NULL, &monitor));
-	if (!init_philosophers(id, id->share, philos))
-		return (clean_mng(id, philos, &monitor));
-	clean_mng(id, philos, &monitor);
+	if (!init_philosophers(id, philos))
+		return (clean_mng(id, philos));
+	watchman(id);
+	clean_mng(id, philos);
 }
