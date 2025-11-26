@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/01 17:13:12 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/26 18:06:32 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/26 19:26:04 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,20 +125,19 @@ typedef struct s_id
 }	t_id;
 
 /***  FUNCTIONS  ***/
-t_bool  		save_share_dynamic_data(int n, t_mod *dy);
-t_bool  		save_id_data(int people, t_shr_data *share, t_id **id);
+t_bool			save_share_dynamic_data(int n, t_mod *dy);
+t_bool			save_id_data(int people, t_shr_data *share, t_id **id);
 pthread_t		*create_philosophers(int n);
 void			one_philosopher(t_id *id, pthread_t *philos);
 void			be_philosopher(t_id *data, pthread_t *philos);
 void			*routine_mng(void *data);
-void			leave_hashi(t_id *single,t_shr_data *share);
-t_bool			take_hashi(t_id *single,t_shr_data *share);
+void			leave_hashi(t_id *single, t_shr_data *share);
+t_bool			take_hashi(t_id *single, t_shr_data *share);
 void			watchman(t_id *id);
 t_bool			is_alive(t_id *single, t_shr_data *share);
 void			write_last_meal(t_id *single, t_shr_data *share);
 t_bool			check_time_up(t_shr_data *share);
 t_bool			check_full(t_shr_data *share);
-
 
 /*** ** UTILS ** ***/
 void			ft_isspace(const char *str, int *i);

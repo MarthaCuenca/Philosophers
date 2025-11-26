@@ -6,12 +6,12 @@
 #    By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/01 16:07:45 by mcuenca-          #+#    #+#              #
-#    Updated: 2025/11/24 14:13:38 by mcuenca-         ###   ########.fr        #
+#    Updated: 2025/11/26 19:04:29 by mcuenca-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC= cc
-CFLAGS= -Wall -Wextra -Werror -g -Iinclude #-fsanitize=address #-lpthread
+CFLAGS= -Wall -Wextra -Werror -g -Iinclude #-fsanitize=thread #-lpthread
 
 HEADER= include/philo.h
 

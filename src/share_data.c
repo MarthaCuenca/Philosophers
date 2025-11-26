@@ -6,52 +6,36 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 19:09:33 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/26 18:21:11 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/26 19:19:46 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include <stdio.h>
 
-t_id	*get_id_card(int people)
+t_bool	save_id_data(int people, t_shr_data *share, t_id **id)
 {
 	int		i;
 	t_id	*tmp;
 
 	tmp = malloc(people * sizeof(t_id));
 	if (!tmp)
-		return (NULL);
-	i = 0;
-	while (i < people)
-	{
-		tmp[i].id = i;
-		tmp[i].hand[R] = i;
-		tmp[i].hand[L] = i + 1;
-		if (tmp[i].hand[L] > people - 1)
-			tmp[i].hand[L] = 0;
-		i++;
-	}
-	return (tmp);
-}
-
-t_bool	save_id_data(int people, t_shr_data *share, t_id **id)
-{
-	int		i;
-	t_id	*single;
-
-	single = get_id_card(people);
-	if (!single)
 		return (FALSE);
 	i = 0;
 	while (i < people)
 	{
-		single[i].feed = 0;
-		single[i].last_meal = share->st->start;
-		single[i].evod = ft_even_odd(i);
-		single[i].share = *&share;
+		tmp[i].id = i;
+		tmp[i].evod = ft_even_odd(i);
+		tmp[i].hand[R] = i;
+		tmp[i].hand[L] = i + 1;
+		if (tmp[i].hand[L] > people - 1)
+			tmp[i].hand[L] = 0;
+		tmp[i].feed = 0;
+		tmp[i].last_meal = share->st->start;
+		tmp[i].share = *&share;
 		i++;
 	}
-	*id = single;
+	*id = tmp;
 	return (TRUE);
 }
 

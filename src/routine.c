@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 19:59:34 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/26 18:13:26 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/26 19:27:56 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 void	think(t_id *single)
 {
 	print_activity(single->share, single->id, THINK);
+	if (single->evod == EVEN)
+		usleep (50);
 }
 
 void	dream(t_id *single, t_shr_data *share)
@@ -48,20 +50,17 @@ void	eat(t_id *single, t_shr_data *share)
 {
 	if (!take_hashi(single, share))
 		return ;
-
 	print_activity(share, single->id, EAT);
 	write_last_meal(single, share);
 	ft_ms_usleep(share->st->eat);
-	
 	leave_hashi(single, share);
-	
 	add_meal(single, share);
 }
 
 t_bool	check_own_full(t_id *single, t_shr_data *share)
 {
 	if (share->st->meals != 0)
-    {
+	{
 		if (single->feed >= share->st->meals)
 			return (TRUE);
 	}
@@ -70,8 +69,8 @@ t_bool	check_own_full(t_id *single, t_shr_data *share)
 
 void	*routine_mng(void *data)
 {
-	t_id        *single;
-	t_shr_data  *share;
+	t_id		*single;
+	t_shr_data	*share;
 
 	single = (t_id *)data;
 	share = ((t_id *)data)->share;
