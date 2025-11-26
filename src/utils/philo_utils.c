@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 19:01:50 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/26 19:55:23 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/26 22:19:01 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,13 @@ unsigned long	ft_conversion(unsigned long long src, int factor, char op)
 
 void	ft_ms_usleep(int n)
 {
-	usleep((useconds_t)n * 1000);
+	usleep(n * 1000);
 }
 
 t_ms	curr_time(void)
 {
 	struct timeval	tv;
 
-	if (gettimeofday(&tv, NULL))
-		return (0);
+	gettimeofday(&tv, NULL);
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }

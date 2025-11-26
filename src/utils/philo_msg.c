@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 17:38:11 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/26 19:51:05 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/26 21:42:16 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,15 +30,15 @@ void	print_activity_2(t_sh *share, int id, t_activity task, t_ms now)
 		else if (task == EAT)
 			printf(ANSI_COLOR_GREEN"%li %i is eating"ANSI_COLOR_RESET"\n", now, id);
 		else if (task == SLEEP)
-			printf("%li %i is sleeping\n", now, id);
+			printf(ANSI_COLOR_CYAN"%li %i is sleeping"ANSI_COLOR_RESET"\n", now, id);
 		else if (task == THINK)
-			printf("%li %i is thinking\n", now, id);
+			printf(ANSI_COLOR_YELLOW"%li %i is thinking"ANSI_COLOR_RESET"\n", now, id);
 		else if (task == ALL_FULL)
 			printf("*****Fest over, all philosophers has eaten!*****\n");
 	}
 	else
 		if (task == DIE)
-			printf("      %li %i died\n", now, id);
+			printf(COLOR_BOLD ANSI_COLOR_RED"      %li %i died"ANSI_COLOR_RESET COLOR_OFF"\n", now, id);
 	pthread_mutex_unlock(&share->mutex[PRINT]);
 }
 

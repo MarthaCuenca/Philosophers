@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/01 17:13:12 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/26 19:35:22 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/26 22:08:30 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,7 @@ t_bool			is_alive(t_id *single, t_sh *share);
 void			write_last_meal(t_id *single, t_sh *share);
 t_bool			check_time_up(t_sh *share);
 t_bool			check_full(t_sh *share);
+t_bool			is_simulation_over(t_id *id, t_sh *share);
 
 /*** ** UTILS ** ***/
 void			ft_isspace(const char *str, int *i);
