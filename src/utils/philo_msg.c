@@ -6,19 +6,19 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 17:38:11 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/26 18:22:17 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/26 19:51:05 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include <stdio.h>
 
-void	print_activity_2(t_shr_data *share, int id, t_activity task, t_ms now)
+void	print_activity_2(t_sh *share, int id, t_activity task, t_ms now)
 {
 	t_bool	time_up;
 
 	time_up = check_time_up(share);
-	pthread_mutex_lock(&share->dy->mutex[PRINT]);
+	pthread_mutex_lock(&share->mutex[PRINT]);
 	if (!time_up)
 	{
 		if (task == FORK)
@@ -39,13 +39,13 @@ void	print_activity_2(t_shr_data *share, int id, t_activity task, t_ms now)
 	else
 		if (task == DIE)
 			printf("      %li %i died\n", now, id);
-	pthread_mutex_unlock(&share->dy->mutex[PRINT]);
+	pthread_mutex_unlock(&share->mutex[PRINT]);
 }
 
-void	print_activity(t_shr_data *share, int id, t_activity task)
+void	print_activity(t_sh *share, int id, t_activity task)
 {
 	t_ms	now;
 
-	now = curr_time() - share->st->start;
+	now = curr_time() - share->start;
 	print_activity_2(share, id + 1, task, now);
 }

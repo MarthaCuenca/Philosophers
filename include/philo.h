@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/01 17:13:12 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/26 19:26:04 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/26 19:35:22 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,22 +82,7 @@ typedef enum e_mutex
 	TIMER,
 }	t_mutex;
 
-/*typedef struct s_hashi
-{
-	t_bool	h_bool;
-}	t_hashi;*/
-
-typedef struct s_mod
-{
-	pthread_mutex_t	*h_mtx;
-	//t_hashi			*hashi;
-	t_bool			*hashi;
-	t_bool			time_up;
-	int				meals_counter;
-	pthread_mutex_t	mutex[5];
-}	t_mod;
-
-typedef struct s_no_mod
+typedef struct s_sh
 {
 	int				people;
 	int				death;
@@ -106,13 +91,14 @@ typedef struct s_no_mod
 	int				meals;
 	int				total_meals;
 	t_ms			start;
-}	t_no_mod;
+	//
+	t_bool			time_up;
+	int				meals_counter;
+	t_bool			*hashi;
+	pthread_mutex_t	*h_mtx;
+	pthread_mutex_t	mutex[5];
 
-typedef struct s_shr_data
-{
-	struct s_no_mod	*st;
-	struct s_mod	*dy;
-}	t_shr_data;
+}	t_sh;
 
 typedef struct s_id
 {
@@ -121,23 +107,23 @@ typedef struct s_id
 	int					hand[2];
 	int					feed;
 	t_ms				last_meal;
-	struct s_shr_data	*share;
+	struct s_sh			*share;
 }	t_id;
 
 /***  FUNCTIONS  ***/
-t_bool			save_share_dynamic_data(int n, t_mod *dy);
-t_bool			save_id_data(int people, t_shr_data *share, t_id **id);
+t_bool			save_share_dynamic_data(int n, t_sh *share);
+t_bool			save_id_data(int people, t_sh *share, t_id **id);
 pthread_t		*create_philosophers(int n);
 void			one_philosopher(t_id *id, pthread_t *philos);
 void			be_philosopher(t_id *data, pthread_t *philos);
 void			*routine_mng(void *data);
-void			leave_hashi(t_id *single, t_shr_data *share);
-t_bool			take_hashi(t_id *single, t_shr_data *share);
+void			leave_hashi(t_id *single, t_sh *share);
+t_bool			take_hashi(t_id *single, t_sh *share);
 void			watchman(t_id *id);
-t_bool			is_alive(t_id *single, t_shr_data *share);
-void			write_last_meal(t_id *single, t_shr_data *share);
-t_bool			check_time_up(t_shr_data *share);
-t_bool			check_full(t_shr_data *share);
+t_bool			is_alive(t_id *single, t_sh *share);
+void			write_last_meal(t_id *single, t_sh *share);
+t_bool			check_time_up(t_sh *share);
+t_bool			check_full(t_sh *share);
 
 /*** ** UTILS ** ***/
 void			ft_isspace(const char *str, int *i);
@@ -152,5 +138,5 @@ void			ft_ms_usleep(int n);
 t_ms			curr_time(void);
 unsigned long	ft_conversion(unsigned long long src, int factor, char op);
 void			clean_mng(t_id *data, pthread_t *philos);
-void			print_activity(t_shr_data *share, int id, t_activity task);
+void			print_activity(t_sh *share, int id, t_activity task);
 #endif

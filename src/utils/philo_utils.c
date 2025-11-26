@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 19:01:50 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/25 15:28:18 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/26 19:55:23 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,5 @@ t_ms	curr_time(void)
 
 	if (gettimeofday(&tv, NULL))
 		return (0);
-	return ((tv.tv_sec * 1000) + tv.tv_usec / 1000);
+	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }

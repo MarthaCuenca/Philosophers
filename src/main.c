@@ -6,37 +6,37 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/01 16:29:57 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/26 18:15:07 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/26 19:38:23 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include <stdio.h>
 
-t_bool	save_share_static_data(char **argv, t_no_mod *st)
+t_bool	save_share_static_data(char **argv, t_sh *share)
 {
-	st->people = ft_atoi(argv[1]);
-	if (st->people == 0)
+	share->people = ft_atoi(argv[1]);
+	if (share->people == 0)
 		return (FALSE);
-	st->death = ft_atoi(argv[2]);
-	if (st->death == 0)
+	share->death = ft_atoi(argv[2]);
+	if (share->death == 0)
 		return (FALSE);
-	st->eat = ft_atoi(argv[3]);
-	if (st->eat == 0)
+	share->eat = ft_atoi(argv[3]);
+	if (share->eat == 0)
 		return (FALSE);
-	st->rest = ft_atoi(argv[4]);
-	if (st->rest == 0)
+	share->rest = ft_atoi(argv[4]);
+	if (share->rest == 0)
 		return (FALSE);
 	if (argv[5])
 	{
-		st->meals = ft_atoi(argv[5]);
-		if (st->meals == 0)
+		share->meals = ft_atoi(argv[5]);
+		if (share->meals == 0)
 			return (FALSE);
 	}
 	else
-		st->meals = 0;
-	st->total_meals = st->people * st->meals;
-	st->start = curr_time();
+		share->meals = 0;
+	share->total_meals = share->people * share->meals;
+	share->start = curr_time();
 	return (TRUE);
 }
 
@@ -84,27 +84,23 @@ t_bool	valid_arg_data(int argc, char **argv)
 
 int	main(int argc, char **argv)
 {
-	t_shr_data	share;
-	t_no_mod	st;
-	t_mod		dy;
+	t_sh		share;
 	t_id		*id;
 	pthread_t	*philos;
 
 	if (!valid_arg_data(argc, argv))
 		return (1);
-	if (!save_share_static_data(argv, &st))
+	if (!save_share_static_data(argv, &share))
 		return (1);
-	if (!save_share_dynamic_data(st.people, &dy))
+	if (!save_share_dynamic_data(share.people, &share))
 		return (1);
-	share.st = &st;
-	share.dy = &dy;
 	id = NULL;
-	if (!save_id_data(share.st->people, &share, &id))
+	if (!save_id_data(share.people, &share, &id))
 		return (1);
-	philos = create_philosophers(id->share->st->people);
+	philos = create_philosophers(share.people);
 	if (!philos)
 		return (clean_mng(id, philos), 1);
-	if (st.people > 1)
+	if (share.people > 1)
 		be_philosopher(id, philos);
 	else
 		one_philosopher(id, philos);

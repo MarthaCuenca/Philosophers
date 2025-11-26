@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 19:57:53 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/26 13:55:13 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/26 19:42:56 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ t_bool	init_philosophers(t_id *id, pthread_t *philos)
 	int	people;
 
 	i = 0;
-	people = id->share->st->people;
+	people = id->share->people;
 	while (i < people)
 	{
 		if (pthread_create(&philos[i], NULL, routine_mng, &id[i]))
