@@ -6,142 +6,76 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/01 16:29:57 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/17 19:15:11 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/27 13:56:59 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include <stdio.h>
-#include <sys/time.h>
 
-t_id	*get_id_card(int n, t_shr_data *share)
+t_bool	are_unsign(char **argv)
 {
-	int		i;
-	t_id	*tmp;
+	int		j;
+	char	*less;
 
-	tmp = malloc(n * sizeof(t_id));
-	if (!tmp)
-		return (NULL);
-	i = 0;
-	while (i < n)
+	j = 1;
+	less = NULL;
+	while (!less && argv[j])
 	{
-		tmp[i].id = i;
-		i++;
+		less = ft_strchr(argv[j], '-');
+		j++;
 	}
-	i = 0;
-	while (i < n)
-	{
-		tmp[i].hand[R] = FALSE;
-		tmp[i].hand[L] = FALSE;
-		tmp[i].share = share;
-		i++;
-	}
-	return (tmp);
-}
-
-t_ms	*create_timer(t_no_mod *st)
-{
-	int		i;
-	t_ms	*tmp;
-
-	tmp = malloc(st->people * sizeof(t_ms));
-	if (!tmp)
-		return (NULL);
-	i = 0;
-	while (i < st->people)
-	{
-		tmp[i] = 0;
-		i++;
-	}
-	return (tmp);
-}
-
-t_bool	*create_hashi(t_no_mod *st)
-{
-	int		i;
-	t_bool	*tmp;
-
-	tmp = malloc(st->people * sizeof(int));
-	if (!tmp)
-		return (NULL);
-	i = 0;
-	while (i < st->people)
-	{
-		tmp[i] = TRUE;
-		i++;
-	}
-	return (tmp);
-}
-
-t_bool	create_share_data(t_mod *dy, t_no_mod *st)
-{
-	dy->hashi = create_hashi(st);
-	if (!dy->hashi)
+	if (less)
 		return (FALSE);
-	dy->timer = create_timer(st);
-	if (!dy->timer)
-		return (free(dy->hashi), FALSE);
 	return (TRUE);
 }
 
-t_bool	are_unsign(char **argv, t_no_mod *st)
-{
-	st->people = ft_atoi(argv[1]);
-	if (st->people <= 0)
-		return (FALSE);
-	st->death = ft_atoi(argv[2]);
-	if (st->death <= 0)
-		return (FALSE);
-	st->eat = ft_atoi(argv[3]);
-	if (st->eat <= 0)
-		return (FALSE);
-	st->rest = ft_atoi(argv[4]);
-	if (st->rest <= 0)
-		return (FALSE);
-	if (argv[5])
-	{
-		st->times = ft_atoi(argv[5]);
-		if (st->times <= 0)
-			return (FALSE);
-	}
-	return (TRUE);
-}
-
-t_bool	are_int(char **argv, t_no_mod *st)
+t_bool	are_int(char **argv)
 {
 	int	j;
 
 	j = 1;
 	while (argv[j])
 	{
-		if (!ft_str_isdigit(argv[j++]))
+		if (!ft_str_isdigit(argv[j]))
 			return (FALSE);
+		j++;
 	}
-	if (!are_unsign(argv, st))
+	return (TRUE);
+}
+
+t_bool	valid_arg_data(int argc, char **argv)
+{
+	if (argc < 5 || argc > 6)
+		return (FALSE);
+	if (!are_int(argv))
+		return (FALSE);
+	if (!are_unsign(argv))
 		return (FALSE);
 	return (TRUE);
 }
 
 int	main(int argc, char **argv)
 {
-	t_shr_data		data;
-	t_no_mod		st;
-	t_mod			dy;
-	t_id			*id;
+	t_sh		share;
+	t_id		*id;
+	pthread_t	*philos;
 
-	if (argc < 5 || argc > 6)
+	if (!valid_arg_data(argc, argv))
 		return (1);
-	if (!are_int(argv, &st))
+	if (!save_share_static_data(argv, &share))
 		return (1);
-	if (!create_share_data(&dy, &st))
+	if (!save_share_dynamic_data(share.people, &share))
 		return (1);
-	data.st = &st;
-	data.st->start = curr_time(0);
-	data.dy = &dy;
-	data.dy->time_up = FALSE;
-	id = get_id_card(data.st->people, &data);
-	if (!id)
-		return (clean_mng(id, NULL, NULL), 1);
-	be_philosopher(id);
+	id = NULL;
+	if (!save_id_data(share.people, &share, &id))
+		return (1);
+	philos = create_philosophers(share.people);
+	if (!philos)
+		return (clean_mng(id, philos), 1);
+	if (share.people > 1)
+		be_philosopher(id, philos);
+	else
+		one_philosopher(id, philos);
 	return (0);
 }

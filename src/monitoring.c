@@ -6,58 +6,166 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 17:48:09 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/17 18:57:22 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/27 13:32:32 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+/*#include "philo.h"
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <pthread.h>
+
+t_bool	check_full(t_sh *share)
+{
+	if (share->meals != 0)
+	{
+		pthread_mutex_lock(&share->mutex[MEALS]);
+		if (share->meals_counter >= share->total_meals)
+		{
+			pthread_mutex_unlock(&share->mutex[MEALS]);
+			print_activity(share, 0, ALL_FULL);
+			return (TRUE);
+		}
+		pthread_mutex_unlock(&share->mutex[MEALS]);
+	}
+	return (FALSE);
+}
+
+t_bool	check_time_up(t_sh *share)
+{
+	t_bool	stop;
+
+	pthread_mutex_lock(&share->mutex[T_UP]);
+	stop = share->time_up;
+	pthread_mutex_unlock(&share->mutex[T_UP]);
+	return (stop);
+}
+
+void	end(t_sh *share)
+{
+	pthread_mutex_lock(&share->mutex[T_UP]);
+	share->time_up = TRUE;
+	pthread_mutex_unlock(&share->mutex[T_UP]);
+}
+
+t_bool	is_alive(t_id *single, t_sh *share)
+{
+	t_ms	now;
+	t_ms	prev;
+
+	now = curr_time();
+	pthread_mutex_lock(&share->mutex[TIMER]);
+	prev = single->last_meal;
+	pthread_mutex_unlock(&share->mutex[TIMER]);
+	if ((now - prev) >= share->death)
+	{
+		end(share);
+		print_activity(share, single->id, DIE);
+		return (FALSE);
+	}
+	return (TRUE);
+}
+
+void	watchman(t_id *id)
+{
+	int			i;
+	t_id		*single;
+	t_sh	*share;
+
+	single = id;
+	share = id->share;
+	while (1)
+	{
+		i = 0;
+		while (i < share->people)
+		{
+			if (!is_alive(&single[i], share))
+				return ;
+			i++;
+		}
+		if (check_full(share))
+			return ;
+		//usleep(100);
+	}
+}*/
 #include "philo.h"
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <pthread.h>
 
-void	is_alive(t_shr_data *share)
+t_bool	check_full(t_sh *share)
 {
-	int			i;
-	t_ms		now;
-
-	i = 0;
-	while (i < share->st->people)
+	if (share->meals != 0)
 	{
-		now = curr_time(share->st->start);
-		pthread_mutex_lock(&share->dy->mutex);
-		if ((now - share->dy->timer[i]) > share->st->death)
+		pthread_mutex_lock(&share->mutex[MEALS]);
+		if (share->meals_counter >= share->total_meals)
 		{
-			share->dy->time_up = TRUE;
-			pthread_mutex_unlock(&share->dy->mutex);
-			print_activity(i, share, DIE);
-			break ;
+			pthread_mutex_unlock(&share->mutex[MEALS]);
+			print_activity(share, 0, ALL_FULL);
+			return (TRUE);
 		}
-		pthread_mutex_unlock(&share->dy->mutex);
+		pthread_mutex_unlock(&share->mutex[MEALS]);
+	}
+	return (FALSE);
+}
+
+t_bool	check_time_up(t_sh *share)
+{
+	t_bool	stop;
+
+	pthread_mutex_lock(&share->mutex[T_UP]);
+	stop = share->time_up;
+	pthread_mutex_unlock(&share->mutex[T_UP]);
+	return (stop);
+}
+
+t_bool	is_alive(t_id *single, t_sh *share)
+{
+	t_ms	now;
+	t_ms	prev;
+
+	now = curr_time();
+	pthread_mutex_lock(&share->mutex[TIMER]);
+	prev = single->last_meal;
+	pthread_mutex_unlock(&share->mutex[TIMER]);
+	if ((now - prev) >= share->death)
+	{
+		pthread_mutex_lock(&share->mutex[T_UP]);
+		share->time_up = TRUE;
+		pthread_mutex_unlock(&share->mutex[T_UP]);
+		print_activity(share, single->id, DIE);
+		return (FALSE);
+	}
+	return (TRUE);
+}
+
+t_bool	is_simulation_over(t_id *id, t_sh *share)
+{
+	int	i;
+
+	if (check_time_up(share))
+		return (TRUE);
+	if (check_full(share))
+		return (TRUE);
+	i = 0;
+	while (i < share->people)
+	{
+		if (check_own_full(&id[i], share))
+			return (FALSE);
+		if (!is_alive(&id[i], share))
+			return (TRUE);
 		i++;
 	}
+	return (FALSE);
 }
 
-void	*watchman(void *data)
+void	watchman(t_id *id)
 {
-	t_shr_data	*share;
+	t_sh	*share;
 
-	share = (t_shr_data *)data;
-	pthread_mutex_lock(&share->dy->mutex);
-	while (!share->dy->time_up)
-	{
-		pthread_mutex_unlock(&share->dy->mutex);
-		is_alive(share);
-		usleep(100);
-		pthread_mutex_lock(&share->dy->mutex);
-	}
-	pthread_mutex_unlock(&share->dy->mutex);
-	return (NULL);
-}
-
-t_bool	monitoring_mng(pthread_t *monitor, t_shr_data *share)
-{
-	if (pthread_create(monitor, NULL, watchman, share))
-		return (FALSE);
-	return (TRUE);
+	share = id->share;
+	while (!is_simulation_over(id, share))
+		usleep(50);
 }

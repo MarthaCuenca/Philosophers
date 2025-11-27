@@ -6,20 +6,24 @@
 #    By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/01 16:07:45 by mcuenca-          #+#    #+#              #
-#    Updated: 2025/11/17 16:44:58 by mcuenca-         ###   ########.fr        #
+#    Updated: 2025/11/27 13:39:20 by mcuenca-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC= cc
-CFLAGS= -Wall -Wextra -Werror -g -Iinclude #-fsanitize=address #-lpthread
+CFLAGS= -Wall -Wextra -Werror -g -Iinclude #-fsanitize=thread #-lpthread
 
 HEADER= include/philo.h
 
 SRCS_DIR= src
 SRCS= src/main.c \
+	  src/data.c \
+	  src/one_philosopher.c \
 	  src/pthreads.c \
 	  src/monitoring.c \
-	  src/routine.c
+	  src/routine.c \
+	  src/eat.c \
+	  src/hashi.c
 
 UTILS_DIR= src/utils
 UTILS= src/utils/ft_isspace.c \
@@ -28,6 +32,8 @@ UTILS= src/utils/ft_isspace.c \
 	   src/utils/ft_bzero.c \
 	   src/utils/ft_calloc.c \
 	   src/utils/ft_atoi.c \
+	   src/utils/ft_even_odd.c \
+	   src/utils/ft_strchr.c \
 	   src/utils/philo_clean_mng.c \
 	   src/utils/philo_utils.c \
 	   src/utils/philo_msg.c
