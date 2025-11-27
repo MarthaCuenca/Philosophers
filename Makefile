@@ -6,7 +6,7 @@
 #    By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/01 16:07:45 by mcuenca-          #+#    #+#              #
-#    Updated: 2025/11/26 19:04:29 by mcuenca-         ###   ########.fr        #
+#    Updated: 2025/11/27 13:39:20 by mcuenca-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,11 +17,12 @@ HEADER= include/philo.h
 
 SRCS_DIR= src
 SRCS= src/main.c \
-	  src/share_data.c \
+	  src/data.c \
 	  src/one_philosopher.c \
 	  src/pthreads.c \
 	  src/monitoring.c \
 	  src/routine.c \
+	  src/eat.c \
 	  src/hashi.c
 
 UTILS_DIR= src/utils

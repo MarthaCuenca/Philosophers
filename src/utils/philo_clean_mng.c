@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 18:58:31 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/26 19:49:25 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/26 23:11:35 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void	clean_pthreads(t_sh *share, pthread_t *philos)
 	pthread_mutex_destroy(&share->mutex[MEALS]);
 	pthread_mutex_destroy(&share->mutex[PRINT]);
 	pthread_mutex_destroy(&share->mutex[TIMER]);
+	pthread_mutex_destroy(&share->mutex[FULL]);
 }
 
 void	clean_mng(t_id *data, pthread_t *philos)

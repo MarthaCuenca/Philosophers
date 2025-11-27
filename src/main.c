@@ -6,39 +6,12 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/01 16:29:57 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/26 19:38:23 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/27 12:44:25 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include <stdio.h>
-
-t_bool	save_share_static_data(char **argv, t_sh *share)
-{
-	share->people = ft_atoi(argv[1]);
-	if (share->people == 0)
-		return (FALSE);
-	share->death = ft_atoi(argv[2]);
-	if (share->death == 0)
-		return (FALSE);
-	share->eat = ft_atoi(argv[3]);
-	if (share->eat == 0)
-		return (FALSE);
-	share->rest = ft_atoi(argv[4]);
-	if (share->rest == 0)
-		return (FALSE);
-	if (argv[5])
-	{
-		share->meals = ft_atoi(argv[5]);
-		if (share->meals == 0)
-			return (FALSE);
-	}
-	else
-		share->meals = 0;
-	share->total_meals = share->people * share->meals;
-	share->start = curr_time();
-	return (TRUE);
-}
 
 t_bool	are_unsign(char **argv)
 {

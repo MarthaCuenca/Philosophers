@@ -6,7 +6,7 @@
 /*   By: mcuenca- <mcuenca-@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 17:38:11 by mcuenca-          #+#    #+#             */
-/*   Updated: 2025/11/26 21:42:16 by mcuenca-         ###   ########.fr       */
+/*   Updated: 2025/11/27 13:48:32 by mcuenca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,17 +28,17 @@ void	print_activity_2(t_sh *share, int id, t_activity task, t_ms now)
 		else if (task == L_FORK)
 			printf("%li %i has taken left fork\n", now, id);
 		else if (task == EAT)
-			printf(ANSI_COLOR_GREEN"%li %i is eating"ANSI_COLOR_RESET"\n", now, id);
+			printf(GREEN"%li %i is eating"RESET"\n", now, id);
 		else if (task == SLEEP)
-			printf(ANSI_COLOR_CYAN"%li %i is sleeping"ANSI_COLOR_RESET"\n", now, id);
+			printf(BLUE"%li %i is sleeping"RESET"\n", now, id);
 		else if (task == THINK)
-			printf(ANSI_COLOR_YELLOW"%li %i is thinking"ANSI_COLOR_RESET"\n", now, id);
+			printf(YELLOW"%li %i is thinking"RESET"\n", now, id);
 		else if (task == ALL_FULL)
-			printf("*****Fest over, all philosophers has eaten!*****\n");
+			printf(ORANGE"*Fest over, all philosophers has eaten!*"RESET"\n");
 	}
 	else
 		if (task == DIE)
-			printf(COLOR_BOLD ANSI_COLOR_RED"      %li %i died"ANSI_COLOR_RESET COLOR_OFF"\n", now, id);
+			printf(BOLD RED"      %li %i died"RESET OFF"\n", now, id);
 	pthread_mutex_unlock(&share->mutex[PRINT]);
 }
 
